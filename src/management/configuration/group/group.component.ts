@@ -29,17 +29,47 @@ const GroupComponent: ng.IComponentOptions = {
     GroupService: GroupService,
     NotificationService: NotificationService,
     $mdDialog: angular.material.IDialogService,
-    $state: StateService
+    $state: StateService,
+    $scope
   ) {
     'ngInject';
 
     this.$onInit = () => {
+      if (this.group.roles) {
+        $scope.selectedApiRole = this.group.roles['API'];
+        $scope.selectedApplicationRole = this.group.roles['APPLICATION'];
+      }
     };
 
     this.updateRole = (member: any) => {
       GroupService.addOrUpdateMember(this.group.id, [member]).then((response) => {
         NotificationService.show('User updated.');
         $state.reload();
+      });
+    };
+
+    this.updateDefaultRole = () => {
+      let roles = {};
+
+      if ($scope.selectedApiRole) {
+        roles['API'] = $scope.selectedApiRole;
+      } else {
+        delete roles['API'];
+      }
+
+      if ($scope.selectedApplicationRole) {
+        roles['APPLICATION'] = $scope.selectedApplicationRole;
+      } else {
+        delete roles['APPLICATION'];
+      }
+
+      GroupService.update(this.group.id, {
+        name: this.group.name,
+        roles: roles,
+        defaultApi: 'defaultApi',
+        defaultApplication: 'defaultApplication',
+      }).then(() => {
+        NotificationService.show('Default roles for group ' + this.group.name + ' have been updated.');
       });
     };
 

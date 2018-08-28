@@ -17,10 +17,36 @@
 -->
 <md-toolbar class="md-table-toolbar md-default">
     <div class="md-toolbar-tools">
-        <span>{{$ctrl.group.name}}</span>
-        <div flex></div>
+        <span flex>{{$ctrl.group.name}}</span>
     </div>
 </md-toolbar>
+
+<md-table-container layout="row" layout-align="center center">
+  <table md-table flex="80">
+    <tbody md-body>
+    <tr md-row style="background-color: white; height: 30px;">
+      <td md-cell nowrap><span style="font-weight: bold">Default API Role</span></td>
+      <td md-cell>
+        <md-select
+                  ng-model="selectedApiRole" aria-label="Default API Role"
+                  ng-change="$ctrl.updateDefaultRole('API', selectedApiRole)">
+          <md-option ng-value="role.name"
+                     ng-repeat="role in $ctrl.apiRoles"
+                     ng-disabled="role.system">{{role.name}}</md-option>
+        </md-select>
+      </td>
+      <td md-cell><span style="font-weight: bold">Default Application Role</span></td>
+      <td md-cell>
+        <md-select ng-model="selectedApplicationRole" aria-label="Default Application Role" ng-change="$ctrl.updateDefaultRole('APPLICATION', selectedApplicationRole)">
+          <md-option ng-value="role.name"
+                     ng-repeat="role in $ctrl.applicationRoles"
+                     ng-disabled="role.system">{{role.name}}</md-option>
+        </md-select>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</md-table-container>
 
 <md-table-container>
     <table md-table ng-init="orderGrp = 'name'">
